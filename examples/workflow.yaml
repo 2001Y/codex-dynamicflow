@@ -1,0 +1,49 @@
+version: 1
+name: sample-codex-flow
+settings:
+  max_concurrency: 4
+  artifact_dir: .codex-flow
+models:
+  fast:
+    model: gpt-5.4-mini
+    reasoning_effort: low
+  coding:
+    model: gpt-5.4
+    reasoning_effort: high
+  strongest:
+    model: gpt-5.4
+    reasoning_effort: xhigh
+phases:
+  - id: discover
+    title: Discover targets
+    concurrency: 2
+    tasks:
+      - id: file_map
+        role: scout
+        model_profile: fast
+        fork_turns: none
+        worktree: read_only
+        prompt: "Inspect the repository and identify independent implementation targets."
+  - id: implement
+    title: Implement isolated change
+    depends_on: [discover]
+    concurrency: 2
+    tasks:
+      - id: implement_demo
+        role: implementer
+        model_profile: coding
+        fork_turns: none
+        worktree: isolated
+        output_schema: schemas/patch_result.schema.json
+        prompt: "Implement the selected target in this isolated worktree and return a compact result."
+  - id: verify
+    title: Verify and synthesize
+    depends_on: [implement]
+    concurrency: 1
+    tasks:
+      - id: final_review
+        role: reviewer
+        model_profile: strongest
+        fork_turns: none
+        worktree: read_only
+        prompt: "Review compact outcomes and diffs only. Do not read raw worker transcripts unless necessary."

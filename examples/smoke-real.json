@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "name": "real-codex-smoke",
+  "settings": {"max_concurrency": 1, "artifact_dir": ".codex-flow"},
+  "phases": [
+    {
+      "id": "smoke",
+      "tasks": [
+        {
+          "id": "say_ok",
+          "model": "gpt-5.4",
+          "reasoning_effort": "low",
+          "worktree": "read_only",
+          "prompt": "Write exactly OK as your final answer. Do not edit files."
+        }
+      ]
+    }
+  ]
+}

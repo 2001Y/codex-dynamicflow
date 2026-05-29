@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /Applications/Xcode-26.4.1.app/Contents/Developer/usr/bin/python3 -m codex_flow.mcp_server
