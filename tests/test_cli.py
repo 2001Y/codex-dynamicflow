@@ -1,9 +1,19 @@
 import json
+import os
 import subprocess
 import sys
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+
+SRC_DIR = Path(__file__).resolve().parents[1] / "src"
+sys.path.insert(0, str(SRC_DIR))
+
+
+def subprocess_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(SRC_DIR) + os.pathsep + env.get("PYTHONPATH", "")
+    return env
 
 
 class CliTests(unittest.TestCase):
@@ -37,6 +47,7 @@ class CliTests(unittest.TestCase):
                 ],
                 text=True,
                 capture_output=True,
+                env=subprocess_env(),
                 check=True,
             )
 
