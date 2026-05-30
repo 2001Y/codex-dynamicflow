@@ -423,7 +423,7 @@ name: codex_dynamic_workflow
 settings:
   max_concurrency: 32
   default_timeout_sec: 1800
-  artifact_dir: .codex-flow
+  artifact_dir: .codex-dynamicflow
   dont_peek: true
 
 models:
@@ -484,8 +484,8 @@ phases:
         worktree: read_only
         dont_peek: true
         input_artifacts:
-          - .codex-flow/results/**/*.json
-          - .codex-flow/diffs/**/*.patch
+          - .codex-dynamicflow/results/**/*.json
+          - .codex-dynamicflow/diffs/**/*.patch
         output_schema: schemas/final_review.schema.json
         prompt: |
           Review the compact outcomes and diffs only.
@@ -573,10 +573,10 @@ codex exec \
   --json \
   -m gpt-5.4 \
   -c model_reasoning_effort="xhigh" \
-  -C .codex-flow/worktrees/review_01 \
+  -C .codex-dynamicflow/worktrees/review_01 \
   --output-schema schemas/review.schema.json \
-  -o .codex-flow/results/review_01.md \
-  "$(cat .codex-flow/prompts/review_01.md)"
+  -o .codex-dynamicflow/results/review_01.md \
+  "$(cat .codex-dynamicflow/prompts/review_01.md)"
 ```
 
 ### 7.4 値は固定しすぎない
@@ -623,7 +623,7 @@ reasoning_profiles:
 
 ```text
 repo/
-  .codex-flow/
+  .codex-dynamicflow/
     run-2026-05-30-001/
       workflow.yaml
       state.json
@@ -646,22 +646,22 @@ repo/
 
 ```bash
 git worktree add \
-  .codex-flow/run-001/worktrees/implement_auth \
-  -b codex-flow/implement_auth \
+  .codex-dynamicflow/run-001/worktrees/implement_auth \
+  -b codex-dynamicflow/implement_auth \
   HEAD
 
 codex exec \
   --json \
   -m "$MODEL" \
   -c model_reasoning_effort="$EFFORT" \
-  -C ".codex-flow/run-001/worktrees/implement_auth" \
+  -C ".codex-dynamicflow/run-001/worktrees/implement_auth" \
   --output-schema "schemas/patch_result.schema.json" \
-  -o ".codex-flow/run-001/results/implement_auth.md" \
-  "$(cat .codex-flow/run-001/prompts/implement_auth.md)" \
-  > ".codex-flow/run-001/logs/implement_auth.jsonl"
+  -o ".codex-dynamicflow/run-001/results/implement_auth.md" \
+  "$(cat .codex-dynamicflow/run-001/prompts/implement_auth.md)" \
+  > ".codex-dynamicflow/run-001/logs/implement_auth.jsonl"
 
-git -C .codex-flow/run-001/worktrees/implement_auth diff \
-  > .codex-flow/run-001/diffs/implement_auth.patch
+git -C .codex-dynamicflow/run-001/worktrees/implement_auth diff \
+  > .codex-dynamicflow/run-001/diffs/implement_auth.patch
 ```
 
 ### 8.4 merge方針
@@ -709,7 +709,7 @@ patches/<task>.patch       # code diff
   "changed_files": ["src/auth/session.ts", "test/auth/session.test.ts"],
   "tests_run": ["npm test -- session.test.ts"],
   "test_status": "passed",
-  "diff_path": ".codex-flow/run-001/diffs/implement_auth.patch",
+  "diff_path": ".codex-dynamicflow/run-001/diffs/implement_auth.patch",
   "summary": "Session refresh handling was fixed and tests were added.",
   "blockers": []
 }
@@ -767,7 +767,7 @@ failed:
   implement_oauth_callback   conflict with src/auth/oauth.ts
 
 artifacts:
-  .codex-flow/run-001/results/
+  .codex-dynamicflow/run-001/results/
 ```
 
 ### 10.3 Slack向け表示
@@ -780,7 +780,7 @@ Slackでは詳細表を長文で出すより、要約を箇条書きにする。
 ▫ agents: 12 running / 38 done / 3 failed / 7 queued
 ▫ effort: low 16 / high 31 / xhigh 13
 ▫ blockers: oauth_callback conflict
-▫ artifacts: .codex-flow/run-001/
+▫ artifacts: .codex-dynamicflow/run-001/
 ```
 
 ---
@@ -892,9 +892,9 @@ implementation worker
 
 実装:
 
-- `.codex-flow/workflow.yaml`
+- `.codex-dynamicflow/workflow.yaml`
 - YAML schema
-- runner CLI: `codex-flow run workflow.yaml`
+- runner CLI: `codex-dynamicflow run workflow.yaml`
 - worktree作成
 - `codex exec --json` 起動
 - JSONL保存
@@ -952,7 +952,7 @@ tools:
 ### 14.1 runner command
 
 ```bash
-codex-flow run .codex-flow/workflow.yaml
+codex-dynamicflow run .codex-dynamicflow/workflow.yaml
 ```
 
 ### 14.2 worker invocation template
@@ -966,7 +966,7 @@ run_task() {
   SCHEMA="$5"
   PROMPT_FILE="$6"
 
-  mkdir -p ".codex-flow/current/logs" ".codex-flow/current/results"
+  mkdir -p ".codex-dynamicflow/current/logs" ".codex-dynamicflow/current/results"
 
   codex exec \
     --json \
@@ -974,9 +974,9 @@ run_task() {
     -c model_reasoning_effort="$EFFORT" \
     -C "$WORKTREE" \
     --output-schema "$SCHEMA" \
-    -o ".codex-flow/current/results/${TASK_ID}.md" \
+    -o ".codex-dynamicflow/current/results/${TASK_ID}.md" \
     "$(cat "$PROMPT_FILE")" \
-    > ".codex-flow/current/logs/${TASK_ID}.jsonl"
+    > ".codex-dynamicflow/current/logs/${TASK_ID}.jsonl"
 }
 ```
 
@@ -987,9 +987,9 @@ You are the synthesis agent.
 
 Read only these compact artifacts:
 
-- .codex-flow/current/results/*.json
-- .codex-flow/current/diffs/*.patch
-- .codex-flow/current/test-summaries/*.json
+- .codex-dynamicflow/current/results/*.json
+- .codex-dynamicflow/current/diffs/*.patch
+- .codex-dynamicflow/current/test-summaries/*.json
 
 Do not read raw worker JSONL logs unless a result explicitly marks itself as incomplete.
 

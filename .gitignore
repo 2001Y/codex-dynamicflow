@@ -1,4 +1,4 @@
-.codex-flow/
+.codex-dynamicflow/
 __pycache__/
 *.pyc
 *.egg-info/

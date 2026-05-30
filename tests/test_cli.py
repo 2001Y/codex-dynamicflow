@@ -27,7 +27,7 @@ class CliTests(unittest.TestCase):
                 [
                     sys.executable,
                     "-m",
-                    "codex_flow.cli",
+                    "codex_dynamicflow.cli",
                     "plan",
                     str(workflow_path),
                     "--repo",
@@ -43,7 +43,7 @@ class CliTests(unittest.TestCase):
             payload = json.loads(completed.stdout)
             self.assertTrue(payload["dry_run"])
             self.assertEqual(payload["tasks"][0]["id"], "scan")
-            self.assertTrue((repo / ".codex-flow" / "cli-run" / "state.json").exists())
+            self.assertTrue((repo / ".codex-dynamicflow" / "cli-run" / "state.json").exists())
 
 
 if __name__ == "__main__":

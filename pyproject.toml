@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "codex-flow"
+name = "codex-dynamicflow"
 version = "0.1.0"
 description = "External workflow runner for Codex CLI: phases, worktrees, model/reasoning routing, and MCP access."
 readme = "README.md"
@@ -13,8 +13,8 @@ license = {text = "MIT"}
 dependencies = []
 
 [project.scripts]
-codex-flow = "codex_flow.cli:main"
-codex-flow-mcp = "codex_flow.mcp_server:main"
+codex-dynamicflow = "codex_dynamicflow.cli:main"
+codex-dynamicflow-mcp = "codex_dynamicflow.mcp_server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

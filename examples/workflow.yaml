@@ -1,8 +1,8 @@
 version: 1
-name: sample-codex-flow
+name: sample-codex-dynamicflow
 settings:
   max_concurrency: 4
-  artifact_dir: .codex-flow
+  artifact_dir: .codex-dynamicflow
 models:
   fast:
     model: gpt-5.4-mini

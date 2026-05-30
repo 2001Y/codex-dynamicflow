@@ -50,7 +50,7 @@ class WorkflowSpec:
 
     @property
     def artifact_dir(self) -> str:
-        return str(self.settings.get("artifact_dir", ".codex-flow"))
+        return str(self.settings.get("artifact_dir", ".codex-dynamicflow"))
 
     @property
     def max_concurrency(self) -> int:

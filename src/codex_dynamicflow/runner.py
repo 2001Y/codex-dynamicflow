@@ -162,7 +162,7 @@ class Runner:
     def _ensure_worktree(self, path: Path, task_id: str) -> None:
         if path.exists():
             return
-        branch = f"codex-flow/{task_id}"
+        branch = f"codex-dynamicflow/{task_id}"
         subprocess.run(
             ["git", "worktree", "add", str(path), "-b", branch, "HEAD"],
             cwd=self.repo,

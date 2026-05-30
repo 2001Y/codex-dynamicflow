@@ -1,7 +1,7 @@
 {
   "version": 1,
   "name": "real-codex-smoke",
-  "settings": {"max_concurrency": 1, "artifact_dir": ".codex-flow"},
+  "settings": {"max_concurrency": 1, "artifact_dir": ".codex-dynamicflow"},
   "phases": [
     {
       "id": "smoke",

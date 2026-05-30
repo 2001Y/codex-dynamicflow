@@ -9,7 +9,7 @@ class MiniYAMLError(ValueError):
 
 
 def load_minimal_yaml(text: str) -> Any:
-    """Parse the small YAML subset used by codex-flow examples.
+    """Parse the small YAML subset used by codex-dynamicflow examples.
 
     This intentionally supports only dictionaries, lists, scalars, and inline
     Python/JSON-like literals. It avoids a PyYAML dependency so the MCP server

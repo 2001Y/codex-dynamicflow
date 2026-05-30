@@ -1,4 +1,4 @@
-# codex-flow
+# codex-dynamicflow
 
 Codex CLIをClaude Code Dynamic Workflows級に使うための外部workflow runner。
 
@@ -17,15 +17,15 @@ Codex CLIをClaude Code Dynamic Workflows級に使うための外部workflow run
 ## 使い方
 
 ```bash
-cd ~/_dev/codex-flow
-python3 -m codex_flow.cli plan examples/workflow.yaml --repo . --run-id smoke-plan
-python3 -m codex_flow.cli run examples/smoke-real.json --repo . --run-id real-smoke
+cd ~/_dev/codex-dynamicflow
+python3 -m codex_dynamicflow.cli plan examples/workflow.yaml --repo . --run-id smoke-plan
+python3 -m codex_dynamicflow.cli run examples/smoke-real.json --repo . --run-id real-smoke
 ```
 
 repo-local shim:
 
 ```bash
-scripts/codex-flow-mcp
+scripts/codex-dynamicflow-mcp
 ```
 
 ## Hermes連携
@@ -34,14 +34,14 @@ Hermes MCP serverとして登録済み。
 
 ```bash
 hermes mcp list
-hermes mcp test codex-flow
+hermes mcp test codex-dynamicflow
 ```
 
 次のHermes新規セッション/再起動後、以下のMCP toolsとして使える。
 
-- `mcp_codex_flow_workflow_plan`
-- `mcp_codex_flow_workflow_run`
-- `mcp_codex_flow_workflow_status`
+- `mcp_codex_dynamicflow_workflow_plan`
+- `mcp_codex_dynamicflow_workflow_run`
+- `mcp_codex_dynamicflow_workflow_status`
 
 ## Workflow例
 
@@ -79,6 +79,6 @@ phases:
 
 ```bash
 python3 -m unittest discover -s tests
-python3 -m codex_flow.cli plan examples/workflow.yaml --repo . --run-id verify
-python3 -m codex_flow.cli run examples/smoke-real.json --repo . --run-id real-smoke
+python3 -m codex_dynamicflow.cli plan examples/workflow.yaml --repo . --run-id verify
+python3 -m codex_dynamicflow.cli run examples/smoke-real.json --repo . --run-id real-smoke
 ```

@@ -13,6 +13,28 @@ def send(proc, payload):
 
 
 class McpServerTests(unittest.TestCase):
+    def test_repo_local_mcp_script_starts_server(self):
+        script = Path(__file__).resolve().parents[1] / "scripts" / "codex-dynamicflow-mcp"
+        proc = subprocess.Popen(
+            [str(script)],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        try:
+            init = send(proc, {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}})
+            self.assertEqual(init["result"]["serverInfo"]["name"], "codex-dynamicflow")
+        finally:
+            proc.terminate()
+            proc.wait(timeout=5)
+            if proc.stdin:
+                proc.stdin.close()
+            if proc.stdout:
+                proc.stdout.close()
+            if proc.stderr:
+                proc.stderr.close()
+
     def test_mcp_server_lists_and_calls_plan_tool(self):
         with TemporaryDirectory() as td:
             repo = Path(td) / "repo"
@@ -30,7 +52,7 @@ class McpServerTests(unittest.TestCase):
             workflow_path.write_text(json.dumps(workflow), encoding="utf-8")
 
             proc = subprocess.Popen(
-                [sys.executable, "-m", "codex_flow.mcp_server"],
+                [sys.executable, "-m", "codex_dynamicflow.mcp_server"],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -38,7 +60,7 @@ class McpServerTests(unittest.TestCase):
             )
             try:
                 init = send(proc, {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}})
-                self.assertEqual(init["result"]["serverInfo"]["name"], "codex-flow")
+                self.assertEqual(init["result"]["serverInfo"]["name"], "codex-dynamicflow")
 
                 tools = send(proc, {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}})
                 names = {tool["name"] for tool in tools["result"]["tools"]}

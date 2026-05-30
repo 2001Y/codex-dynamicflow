@@ -8,7 +8,7 @@ from typing import Any, Dict
 from .runner import Runner
 
 
-SERVER_INFO = {"name": "codex-flow", "version": "0.1.0"}
+SERVER_INFO = {"name": "codex-dynamicflow", "version": "0.1.0"}
 
 
 def main() -> int:
@@ -114,13 +114,13 @@ def tools() -> list[Dict[str, Any]]:
         },
         {
             "name": "workflow_status",
-            "description": "Read a codex-flow state.json file for an existing run.",
+            "description": "Read a codex-dynamicflow state.json file for an existing run.",
             "inputSchema": {
                 "type": "object",
                 "properties": {
                     "repo": repo_arg,
                     "run_id": {"type": "string"},
-                    "artifact_dir": {"type": "string", "default": ".codex-flow"},
+                    "artifact_dir": {"type": "string", "default": ".codex-dynamicflow"},
                 },
                 "required": ["repo", "run_id"],
             },
@@ -137,7 +137,7 @@ def call_workflow(arguments: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
 
 def call_status(arguments: Dict[str, Any]) -> Dict[str, Any]:
     repo = Path(str(arguments["repo"])).expanduser().resolve()
-    artifact_dir = str(arguments.get("artifact_dir") or ".codex-flow")
+    artifact_dir = str(arguments.get("artifact_dir") or ".codex-dynamicflow")
     run_id = str(arguments["run_id"])
     state_path = repo / artifact_dir / run_id / "state.json"
     return json.loads(state_path.read_text(encoding="utf-8"))

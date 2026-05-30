@@ -9,7 +9,7 @@ from .runner import Runner
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="codex-flow")
+    parser = argparse.ArgumentParser(prog="codex-dynamicflow")
     parser.add_argument("--codex-bin", default="codex")
     sub = parser.add_subparsers(dest="command", required=True)
 

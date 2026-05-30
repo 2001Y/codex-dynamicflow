@@ -5,15 +5,15 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-from codex_flow.workflow import WorkflowValidationError, load_workflow
-from codex_flow.runner import Runner
+from codex_dynamicflow.workflow import WorkflowValidationError, load_workflow
+from codex_dynamicflow.runner import Runner
 
 
 def write_workflow(path: Path) -> Path:
     workflow = {
         "version": 1,
         "name": "sample",
-        "settings": {"max_concurrency": 4, "artifact_dir": ".codex-flow"},
+        "settings": {"max_concurrency": 4, "artifact_dir": ".codex-dynamicflow"},
         "models": {
             "fast": {"model": "gpt-fast", "reasoning_effort": "low"},
             "coding": {"model": "gpt-coding", "reasoning_effort": "high"},
@@ -88,7 +88,7 @@ class WorkflowTests(unittest.TestCase):
             self.assertEqual(result["run_id"], "run-test")
             self.assertTrue(result["dry_run"])
             self.assertEqual(len(result["tasks"]), 2)
-            plan_path = repo / ".codex-flow" / "run-test" / "state.json"
+            plan_path = repo / ".codex-dynamicflow" / "run-test" / "state.json"
             self.assertTrue(plan_path.exists())
             plan = json.loads(plan_path.read_text())
             fix = next(task for task in plan["tasks"] if task["id"] == "fix_auth")
@@ -112,7 +112,7 @@ class WorkflowTests(unittest.TestCase):
             workflow_path = repo / "workflow.json"
             workflow_path.write_text(json.dumps(workflow), encoding="utf-8")
 
-            with patch("codex_flow.runner.subprocess.run") as run:
+            with patch("codex_dynamicflow.runner.subprocess.run") as run:
                 run.return_value = subprocess.CompletedProcess(["fake-codex"], 0)
 
                 result = Runner(repo=repo, codex_bin="fake-codex").run(
