@@ -1,7 +1,9 @@
 import json
+import subprocess
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 from codex_flow.workflow import WorkflowValidationError, load_workflow
 from codex_flow.runner import Runner
@@ -94,6 +96,31 @@ class WorkflowTests(unittest.TestCase):
             self.assertEqual(fix["reasoning_effort"], "high")
             self.assertIn("model_reasoning_effort=high", " ".join(fix["command"]))
             self.assertTrue(fix["worktree"].endswith("worktrees/fix_auth"))
+
+    def test_runner_exec_does_not_inherit_mcp_stdin(self):
+        with TemporaryDirectory() as td:
+            repo = Path(td) / "repo"
+            repo.mkdir()
+            (repo / ".git").mkdir()
+            workflow = {
+                "version": 1,
+                "name": "stdin-guard",
+                "phases": [
+                    {"id": "smoke", "tasks": [{"id": "say_ok", "prompt": "Say OK"}]}
+                ],
+            }
+            workflow_path = repo / "workflow.json"
+            workflow_path.write_text(json.dumps(workflow), encoding="utf-8")
+
+            with patch("codex_flow.runner.subprocess.run") as run:
+                run.return_value = subprocess.CompletedProcess(["fake-codex"], 0)
+
+                result = Runner(repo=repo, codex_bin="fake-codex").run(
+                    workflow_path, dry_run=False, run_id="stdin-guard"
+                )
+
+            self.assertEqual(result["execution"]["tasks"][0]["status"], "success")
+            self.assertIs(run.call_args.kwargs["stdin"], subprocess.DEVNULL)
 
 
 if __name__ == "__main__":

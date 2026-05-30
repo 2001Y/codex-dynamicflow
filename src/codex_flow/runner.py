@@ -120,6 +120,7 @@ class Runner:
                 completed = subprocess.run(
                     task["command"],
                     cwd=self.repo,
+                    stdin=subprocess.DEVNULL,
                     stdout=stdout,
                     stderr=subprocess.STDOUT,
                     text=True,
